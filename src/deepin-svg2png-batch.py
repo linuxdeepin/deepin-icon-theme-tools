@@ -12,7 +12,7 @@ opt_parser.add_option('-s', '--sizes',
         action='store',
         type='str',
         dest='sizes',
-        default='32,48,96,128,scalable',
+        default='16,22,24,32,48,64,96,128,scalable',
         )
 
 opt_parser.add_option('-o', '--output-pattern',
