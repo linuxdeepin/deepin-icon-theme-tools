@@ -1,1 +1,1 @@
-src/deepin-svg2png-batch.py /usr/bin
+build/deepin-svg2png-batch /usr/bin
