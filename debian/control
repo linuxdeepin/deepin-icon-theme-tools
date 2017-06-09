@@ -1,0 +1,12 @@
+Source: deepin-icon-theme-tools
+Section: x11
+Priority: optional
+Maintainer: Deepin Sysdev <sysdev@deepin.com>
+Standards-Version: 3.9.5
+Build-Depends: debhelper (>= 9)
+
+Package: deepin-icon-theme-tools
+Architecture: all
+Depends: python3, librsvg2-bin
+Description: Deepin Icons tools
+ This package is DeepinIconTheme tools
