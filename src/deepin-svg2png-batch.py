@@ -4,31 +4,34 @@ import os
 import os.path
 import subprocess
 from shutil import copyfile
-from optparse import OptionParser
+import argparse
 
-opt_parser = OptionParser()
+parser = argparse.ArgumentParser()
+parser.add_argument('svg_file', help='input svg file')
 
-opt_parser.add_option('-s', '--sizes',
-        action='store',
-        type='str',
+default_output_pattern = 'icons/hicolor/<size2>/apps'
+default_sizes = '16,22,24,32,48,64,96,128,scalable'
+
+parser.add_argument('-s', '--sizes',
         dest='sizes',
-        default='16,22,24,32,48,64,96,128,scalable',
+        default=default_sizes,
+        help='the list of sizes to export, comma split, default: %s' % default_sizes
         )
 
-opt_parser.add_option('-o', '--output-pattern',
-        action='store',
-        type='str',
+parser.add_argument('-o', '--output-pattern',
         dest='output_pattern',
-        default='icons/hicolor/<size2>/apps'
+        metavar='PATTERN',
+        default= default_output_pattern,
+        help=('the output file path pattern, must contain <size1> or <size2> mark, ' +
+        '<size1> will be replaced with a single number, ' +
+        'and <size2> will be replaced with number x number. ' +
+        'default: %s') % default_output_pattern
         )
 
-(options, args) = opt_parser.parse_args()
-
-svg_file = args[0]
-
-output_pattern = options.output_pattern
-sizes_str = options.sizes
-sizes=sizes_str.split(',')
+args = parser.parse_args()
+svg_file = args.svg_file
+output_pattern = args.output_pattern
+sizes=args.sizes.split(',')
 
 name = os.path.splitext(os.path.basename(svg_file))[0]
 
@@ -52,19 +55,19 @@ def get_filename(pattern, size, name):
         raise Exception('no found <sizeX> in pattern %s' % pattern)
     return os.path.join(pattern, name)
 
-# main()
-print("src ", svg_file, os.path.getsize(svg_file))
-for size in sizes:
-    ext = '.png'
-    if size == 'scalable':
-        ext = '.svg'
+if __name__ == '__main__':
+    print("src ", svg_file, os.path.getsize(svg_file))
+    for size in sizes:
+        ext = '.png'
+        if size == 'scalable':
+            ext = '.svg'
 
-    output = get_filename(output_pattern, size , name + ext)
-    os.makedirs( os.path.dirname(output), mode=0o755, exist_ok=True)
+        output = get_filename(output_pattern, size , name + ext)
+        os.makedirs( os.path.dirname(output), mode=0o755, exist_ok=True)
 
-    if ext == '.png':
-        svg2png(svg_file, output, int(size))
-    else:
-        copyfile(svg_file, output)
-    print(output, os.path.getsize(output))
+        if ext == '.png':
+            svg2png(svg_file, output, int(size))
+        else:
+            copyfile(svg_file, output)
+        print(output, os.path.getsize(output))
 
